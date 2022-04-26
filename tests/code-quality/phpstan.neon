@@ -1,0 +1,12 @@
+parameters:
+  checkUninitializedProperties: true
+  level: 8
+  tmpDir: ./tmp
+  paths:
+    - ../../src
+  excludePaths:
+
+includes:
+  - ../../vendor/phpstan/phpstan/conf/bleedingEdge.neon
+  - ../../vendor/phpstan/phpstan-strict-rules/rules.neon
+  - ./phpstan-baseline.neon

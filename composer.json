@@ -1,0 +1,56 @@
+{
+    "name": "15web/sailplay-sdk",
+    "description": "A PHP SDK for SailPlay HTTP API (https://sailplay.ru/)",
+    "type": "library",
+    "keywords": ["sailplay", "sdk"],
+    "homepage": "https://github.com/15web/sailplay-sdk",
+    "license": "GPL-2.0-only",
+    "authors": [
+        {
+            "name": "15web",
+            "email": "info@15web.ru"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.5",
+        "ext-json": "*",
+        "guzzlehttp/guzzle": "^7.4",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/http-message": "^1.0",
+        "psr/log": "^1.1.4",
+        "webmozart/assert": "^1.10"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "friendsofphp/php-cs-fixer": "^v3.4",
+        "squizlabs/php_codesniffer": "^3.6",
+        "slevomat/coding-standard": "^7.1",
+        "phpstan/phpstan": "^1.5",
+        "phpstan/phpstan-strict-rules": "^1.1"
+    },
+    "autoload": {
+        "psr-4": { "Studio15\\SailPlay\\SDK\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Studio15\\SailPlay\\SDK\\Test\\Unit\\": "tests/unit/" }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "scripts": {
+        "stan": "phpstan analyse -c ./tests/code-quality/phpstan.neon --ansi",
+        "fixer-check": "php-cs-fixer --config=./tests/code-quality/.php-cs-fixer.php fix --dry-run --diff --ansi -v",
+        "fixer-fix": "php-cs-fixer --config=./tests/code-quality/.php-cs-fixer.php fix --ansi -v",
+        "sniffer-check": "phpcs ./src --standard=./tests/code-quality/phpcs.xml -p",
+        "sniffer-fix": "phpcbf ./src --standard=./tests/code-quality/phpcs.xml -p",
+        "unit": "phpunit tests",
+        "check": ["@stan", "@fixer-check", "@sniffer-check", "@unit"]
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false,
+            "veewee/composer-run-parallel": true
+        }
+    }
+}
