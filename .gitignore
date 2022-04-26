@@ -1,0 +1,6 @@
+/vendor/
+/.idea
+.DS_Store
+
+/tests/code-quality/tmp/**
+!/tests/code-quality/tmp/.gitkeep
