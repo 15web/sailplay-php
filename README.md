@@ -5,16 +5,19 @@
 ```php
 <?php
 
-declare(strict_types=1);
-
 require_once 'vendor/autoload.php';
 
-$client = new Studio15\SailPlay\SDK\Http\PsrClientAdapter(
-    new GuzzleHttp\Client(),
-    new Studio15\SailPlay\SDK\Http\DefaultServerRequestFactory()
-);
+$client = \Studio15\SailPlay\SDK\Infrastructure\DefaultApiHttpClientFactory::create();
 
-(new Studio15\SailPlay\SDK\Api\Login($client))();
+$login = new \Studio15\SailPlay\SDK\Api\Login\Login($client);
+
+$loginRequest = new \Studio15\SailPlay\SDK\Api\Login\LoginRequest(76074, 23918408, 4943);
+
+$loginResponse = ($login)($loginRequest);
+
+var_dump(
+    $loginResponse->getToken()
+);
 ```
 
 ## Разработка
