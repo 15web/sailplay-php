@@ -19,6 +19,8 @@
         "psr/http-factory": "^1.0",
         "psr/http-message": "^1.0",
         "psr/log": "^1.1.4",
+        "symfony/property-access": "^5.4",
+        "symfony/serializer": "^5.4",
         "webmozart/assert": "^1.10"
     },
     "require-dev": {
@@ -44,7 +46,8 @@
         "sniffer-check": "phpcs ./src --standard=./tests/code-quality/phpcs.xml -p",
         "sniffer-fix": "phpcbf ./src --standard=./tests/code-quality/phpcs.xml -p",
         "unit": "phpunit tests",
-        "check": ["@stan", "@fixer-check", "@sniffer-check", "@unit"]
+        "check": ["@stan", "@fixer-check", "@sniffer-check", "@unit"],
+        "fix": ["@fixer-fix", "@sniffer-fix"]
     },
     "config": {
         "sort-packages": true,

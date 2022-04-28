@@ -1,8 +1,8 @@
 <?php
 
-namespace Studio15\SailPlay\SDK\Test\Unit\Http;
+namespace Studio15\SailPlay\SDK\Test\Unit\Http\RequestFactory;
 
-use Studio15\SailPlay\SDK\Http\DefaultServerRequestFactory;
+use Studio15\SailPlay\SDK\Infrastructure\Http\RequestFactory\DefaultServerRequestFactory;
 use PHPUnit\Framework\TestCase;
 
 class DefaultRequestFactoryTest extends TestCase
@@ -22,5 +22,10 @@ class DefaultRequestFactoryTest extends TestCase
         $this->assertEquals('https://test.ru/api/v2/test/', (string) $request->getUri());
         $this->assertCount(1, $request->getHeader('Content-Type'));
         $this->assertEquals('x-www-form-urlencoded', $request->getHeader('Content-Type')[0]);
+
+        $request = $defaultRequestFactory->createServerRequest('POST', 'test', [
+            'queryString' => 'x=1&y=2&z=3'
+        ]);
+        $this->assertEquals('https://test.ru/api/v2/test/?x=1&y=2&z=3', (string) $request->getUri());
     }
 }

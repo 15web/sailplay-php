@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Studio15\SailPlay\SDK\Http;
+namespace Studio15\SailPlay\SDK\Infrastructure\Http\RequestFactory;
 
 use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -34,33 +35,42 @@ final class DefaultServerRequestFactory implements ServerRequestFactoryInterface
     /**
      * {@inheritDoc}
      *
-     * @param array{body: string}|mixed[] $serverParams
+     * @param array{queryString: string}|mixed[] $serverParams
      */
     public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
     {
         Assert::inArray($method, self::SUPPORTED_METHODS);
-        Assert::notEmpty($uri);
 
-        $preparedUri = $this->prepareUri($uri);
+        $preparedUri = $this->prepareUri($uri, $serverParams['queryString'] ?? null);
         $preparedHeaders = $this->prepareHeaders($method);
 
-        return new ServerRequest($method, $preparedUri, $preparedHeaders, $serverParams['body'] ?? null);
+        return new ServerRequest($method, $preparedUri, $preparedHeaders);
     }
 
     /**
-     * @param string|UriInterface $uri
+     * @param string|UriInterface $path
      */
-    private function prepareUri($uri): string
+    private function prepareUri($path, ?string $queryString): UriInterface
     {
-        Assert::notEmpty($uri);
+        $uri = new Uri($this->baseUri);
 
-        $uri = (string) $uri;
+        if ($path instanceof UriInterface) {
+            $path = $path->getPath();
+        }
 
-        $uri = rtrim($uri, '/');
-        $uri = ltrim($uri, '/');
+        $path = rtrim($path, '/');
+        $path = ltrim($path, '/');
+        $path = sprintf('/%s/', $path);
 
-        // trailing slash required due to errors
-        return sprintf('%s/%s/', $this->baseUri, $uri);
+        $uri = $uri->withPath($uri->getPath().$path);
+
+        if ($queryString !== null) {
+            $queryString = rtrim($queryString, '/');
+            $queryString = ltrim($queryString, '/');
+            $uri = $uri->withQuery($queryString);
+        }
+
+        return $uri;
     }
 
     /**
@@ -70,7 +80,8 @@ final class DefaultServerRequestFactory implements ServerRequestFactoryInterface
     {
         Assert::inArray($method, self::SUPPORTED_METHODS);
 
-        $headers = [];
+        $headers = ['Accept' => 'application/json'];
+
         if ($method === self::METHOD_POST) {
             $headers['Content-Type'] = 'x-www-form-urlencoded';
         }
