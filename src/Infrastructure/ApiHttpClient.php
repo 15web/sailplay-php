@@ -13,7 +13,12 @@ interface ApiHttpClient
      *
      * @return T
      */
-    public function get(string $resourcePath, string $responseClass, ?object $request): object;
+    public function get(
+        string $resourcePath,
+        string $responseClass,
+        ?object $request = null,
+        ?string $token = null
+    ): object;
 
     /**
      * @template T of object
@@ -22,5 +27,10 @@ interface ApiHttpClient
      *
      * @return T
      */
-    public function post(string $resourcePath, string $responseClass, ?object $request): object;
+    public function post(
+        string $resourcePath,
+        string $responseClass,
+        ?object $request = null,
+        ?string $token = null
+    ): object;
 }

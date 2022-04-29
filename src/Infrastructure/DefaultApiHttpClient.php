@@ -53,20 +53,28 @@ final class DefaultApiHttpClient implements ApiHttpClient
         $this->serverRequestFactory = $serverRequestFactory;
     }
 
-    public function get(string $resourcePath, string $responseClass, ?object $request): object
-    {
+    public function get(
+        string $resourcePath,
+        string $responseClass,
+        ?object $request = null,
+        ?string $token = null
+    ): object {
         Assert::notEmpty($resourcePath);
         Assert::classExists($responseClass);
 
-        return $this->doRequest(self::METHOD_GET, $resourcePath, $responseClass, $request);
+        return $this->doRequest(self::METHOD_GET, $resourcePath, $responseClass, $request, $token);
     }
 
-    public function post(string $resourcePath, string $responseClass, ?object $request): object
-    {
+    public function post(
+        string $resourcePath,
+        string $responseClass,
+        ?object $request = null,
+        ?string $token = null
+    ): object {
         Assert::notEmpty($resourcePath);
         Assert::classExists($responseClass);
 
-        return $this->doRequest(self::METHOD_POST, $resourcePath, $responseClass, $request);
+        return $this->doRequest(self::METHOD_POST, $resourcePath, $responseClass, $request, $token);
     }
 
     /**
@@ -76,7 +84,7 @@ final class DefaultApiHttpClient implements ApiHttpClient
      *
      * @return T
      */
-    private function doRequest(string $method, string $resourcePath, string $responseClass, ?object $request): object
+    private function doRequest(string $method, string $resourcePath, string $responseClass, ?object $request, ?string $token = null): object
     {
         Assert::inArray($method, self::SUPPORTED_METHODS);
         Assert::notEmpty($resourcePath);
@@ -88,6 +96,11 @@ final class DefaultApiHttpClient implements ApiHttpClient
              * @var array<string, string> $normalizedRequest
              */
             $normalizedRequest = $this->serializer->normalize($request);
+
+            if ($token !== null) {
+                $normalizedRequest['token'] = $token;
+            }
+
             $queryString = http_build_query($normalizedRequest);
         }
 

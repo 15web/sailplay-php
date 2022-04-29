@@ -18,8 +18,13 @@ final class Info
         $this->apiClient = $client;
     }
 
-    public function __invoke(InfoRequest $infoRequest): infoResponse
+    public function __invoke(InfoRequest $infoRequest, string $token): infoResponse
     {
-        return $this->apiClient->get(self::RESOURCE_URI, infoResponse::class, $infoRequest);
+        return $this->apiClient->get(
+            self::RESOURCE_URI,
+            infoResponse::class,
+            $infoRequest,
+            $token
+        );
     }
 }
