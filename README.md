@@ -7,17 +7,21 @@
 
 require_once 'vendor/autoload.php';
 
-$client = \Studio15\SailPlay\SDK\Infrastructure\DefaultApiHttpClientFactory::create();
-
-$login = new \Studio15\SailPlay\SDK\Api\Login\Login($client);
-
-$loginRequest = new \Studio15\SailPlay\SDK\Api\Login\LoginRequest(12345, 12345678, 1234);
-
-$loginResponse = ($login)($loginRequest);
-
-var_dump(
-    $loginResponse->getToken()
+// отправляем запрос на получение токена
+$loginResponse = Studio15\SailPlay\SDK\Api\ApiFacade::login(
+    $storeDepartmentId = 12345,
+    $storeDepartmentKey = 12345678,
+    $pinCode = 1234
 );
+
+// отправляем запрос на получение информации о клиенте
+$userInfoResponse = Studio15\SailPlay\SDK\Api\ApiFacade::usersInfo(
+    $loginResponse->getToken(),
+    $storeDepartmentId = 12345,
+    $userPhone = '79991234567'
+);
+
+var_dump($userInfoResponse);
 ```
 
 ## Разработка
@@ -31,7 +35,7 @@ var_dump(
 ```
 ### Запуск PHP
 ```shell
-./bin/run.bash php tests/functional/api_request.php
+./bin/run.bash php tests/functional/Users/info.php
 ```
 
 ### Copyright and license
