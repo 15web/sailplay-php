@@ -21,7 +21,7 @@ final class DefaultApiHttpClientFactory
         );
 
         return new DefaultApiHttpClient(
-            new Client(['verify' => false]),
+            new Client(),
             new DefaultServerRequestFactory(),
             $symfonySerializer
         );

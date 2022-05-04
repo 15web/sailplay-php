@@ -3,6 +3,7 @@ FROM php:7.2.5-cli
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update; \
+    apt-get upgrade -y; \
     apt-get install -y --no-install-recommends unzip;
 
 ARG USER_ID
