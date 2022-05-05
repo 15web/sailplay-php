@@ -6,3 +6,5 @@
 !/tests/code-quality/tmp/.gitkeep
 
 /tests/functional/.env
+
+/var

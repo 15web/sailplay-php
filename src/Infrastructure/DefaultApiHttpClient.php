@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Studio15\SailPlay\SDK\Infrastructure;
 
+use Psr\Http\Client\ClientExceptionInterface as ClientException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Studio15\SailPlay\SDK\Infrastructure\Error\ApiErrorException;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 use Webmozart\Assert\Assert;
@@ -53,6 +55,12 @@ final class DefaultApiHttpClient implements ApiHttpClient
         $this->serverRequestFactory = $serverRequestFactory;
     }
 
+    /**
+     * @throws ApiErrorException
+     * @throws ClientException
+     * @throws SerializerException
+     * @throws Throwable
+     */
     public function get(
         string $resourcePath,
         string $responseClass,
@@ -65,6 +73,12 @@ final class DefaultApiHttpClient implements ApiHttpClient
         return $this->doRequest(self::METHOD_GET, $resourcePath, $responseClass, $request, $token);
     }
 
+    /**
+     * @throws ApiErrorException
+     * @throws ClientException
+     * @throws SerializerException
+     * @throws Throwable
+     */
     public function post(
         string $resourcePath,
         string $responseClass,
@@ -81,6 +95,11 @@ final class DefaultApiHttpClient implements ApiHttpClient
      * @template T of object
      *
      * @param class-string<T> $responseClass
+     *
+     * @throws ApiErrorException
+     * @throws ClientException
+     * @throws SerializerException
+     * @throws Throwable
      *
      * @return T
      */

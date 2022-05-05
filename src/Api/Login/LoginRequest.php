@@ -15,12 +15,14 @@ final class LoginRequest
      * @var int
      */
     private $storeDepartmentId;
+
     /**
      * Ключ департамента
      *
      * @var int
      */
     private $storeDepartmentKey;
+
     /**
      * Пин-код
      *

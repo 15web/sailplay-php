@@ -3,6 +3,8 @@
 namespace Studio15\SailPlay\SDK\Api\Users\Info;
 
 use Studio15\SailPlay\SDK\Infrastructure\ApiHttpClient;
+use Studio15\SailPlay\SDK\Infrastructure\Error\ApiErrorException;
+use Throwable;
 
 final class Info
 {
@@ -18,6 +20,10 @@ final class Info
         $this->apiClient = $client;
     }
 
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
     public function __invoke(InfoRequest $infoRequest, string $token): infoResponse
     {
         return $this->apiClient->get(

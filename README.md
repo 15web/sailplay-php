@@ -1,27 +1,39 @@
 # SailPlay PHP SDK
 
-## Использование
+## Установка
+```shell
+composer require 15web/sailplay-sdk
+```
 
+## Использование
 ```php
 <?php
 
 require_once 'vendor/autoload.php';
 
-// отправляем запрос на получение токена
-$loginResponse = Studio15\SailPlay\SDK\Api\ApiFacade::login(
-    $storeDepartmentId = 12345,
-    $storeDepartmentKey = 12345678,
-    $pinCode = 1234
-);
+try {
+    // отправляем запрос на получение токена
+    $loginResponse = \Studio15\SailPlay\SDK\SailPlayApi::login(
+        $storeDepartmentId = 12345,
+        $storeDepartmentKey = 12345678,
+        $pinCode = 1234
+    );
+// при наличии в ответе ошибки будет выброшено соответствующее исключение
+} catch (\Studio15\SailPlay\SDK\Api\Login\AuthErrorException $authErrorException) {
+    echo "Ошибка аутентификации: {$authErrorException->getMessage()}";
+}
+
+// ответ - это объект с геттерами доступных полей
+$token = $loginResponse->getToken();
 
 // отправляем запрос на получение информации о клиенте
-$userInfoResponse = Studio15\SailPlay\SDK\Api\ApiFacade::usersInfo(
-    $loginResponse->getToken(),
+$userInfoResponse = \Studio15\SailPlay\SDK\SailPlayApi::usersInfo(
+    $token,
     $storeDepartmentId = 12345,
     $userPhone = '79991234567'
 );
 
-var_dump($userInfoResponse);
+echo $userInfoResponse->getEmail();
 ```
 
 ## Разработка

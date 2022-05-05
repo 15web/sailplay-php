@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 require_once 'tests/functional/bootstrap.php';
 
-use Studio15\SailPlay\SDK\Api\ApiFacade;
+use Studio15\SailPlay\SDK\SailPlayApi;
 
-$loginResponse = ApiFacade::login(
+$loginResponse = SailPlayApi::login(
     (int) $_ENV['STORE_DEPARTMENT_ID'],
     (int) $_ENV['STORE_DEPARTMENT_KEY'],
     (int) $_ENV['PIN_CODE']
 );
 
-$infoResponse = ApiFacade::usersInfo(
+$infoResponse = SailPlayApi::usersInfo(
     $loginResponse->getToken(),
     (int) $_ENV['STORE_DEPARTMENT_ID'],
     (string) $_ENV['USER_PHONE']
