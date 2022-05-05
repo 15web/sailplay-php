@@ -15,7 +15,10 @@ $loginResponse = SailPlayApi::login(
 $infoResponse = SailPlayApi::usersInfo(
     $loginResponse->getToken(),
     (int) $_ENV['STORE_DEPARTMENT_ID'],
-    (string) $_ENV['USER_PHONE']
+    (string) $_ENV['USER_PHONE'],
+    $history = true,
+    $subscriptions = true,
+    $multi = false
 );
 
 var_dump($infoResponse);

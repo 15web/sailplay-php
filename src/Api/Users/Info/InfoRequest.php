@@ -25,16 +25,22 @@ final class InfoRequest
     private $userPhone;
 
     /**
+     * Признак, показывать ли исторические данные по клиенту
+     *
      * @var int
      */
     private $history;
 
     /**
+     * Признак, добавлять ли информацию о Email/SMS подписке клиента
+     *
      * @var int
      */
     private $subscriptions;
 
     /**
+     * Признак мульти-проверки, позволяющий проверить несколько типов идентификаторов в одном запросе
+     *
      * @var int
      */
     private $multi;

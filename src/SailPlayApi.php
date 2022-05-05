@@ -11,9 +11,11 @@ use Studio15\SailPlay\SDK\Api\Login\LoginRequest;
 use Studio15\SailPlay\SDK\Api\Login\LoginResponse;
 use Studio15\SailPlay\SDK\Api\Users\Info\Info;
 use Studio15\SailPlay\SDK\Api\Users\Info\InfoRequest;
-use Studio15\SailPlay\SDK\Api\Users\Info\infoResponse;
+use Studio15\SailPlay\SDK\Api\Users\Info\Response\infoResponse;
+use Studio15\SailPlay\SDK\Api\Users\UserNotFoundException;
 use Studio15\SailPlay\SDK\Infrastructure\ApiHttpClient;
 use Studio15\SailPlay\SDK\Infrastructure\DefaultApiHttpClient;
+use Studio15\SailPlay\SDK\Infrastructure\Error\ApiErrorException;
 use Studio15\SailPlay\SDK\Infrastructure\Http\RequestFactory\DefaultServerRequestFactory;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
@@ -54,25 +56,29 @@ final class SailPlayApi
     }
 
     /**
+     * @throws UserNotFoundException
+     * @throws ApiErrorException
      * @throws Throwable
-     * @throws Infrastructure\Error\ApiErrorException
      */
     public static function usersInfo(
         string $token,
         int $storeDepartmentId,
         string $userPhone,
-        int $history = 0,
-        int $subscriptions = 0,
-        int $multi = 0
+        bool $history = false,
+        bool $subscriptions = false,
+        bool $multi = false
     ): infoResponse {
         Assert::greaterThan($storeDepartmentId, 0);
         Assert::regex($userPhone, '/^7\d{10}$/');
-        Assert::inArray($history, [0, 1]);
-        Assert::inArray($subscriptions, [0, 1]);
-        Assert::inArray($multi, [0, 1]);
 
         $info = new Info(self::getClient());
-        $infoRequest = new InfoRequest($storeDepartmentId, $userPhone);
+        $infoRequest = new InfoRequest(
+            $storeDepartmentId,
+            $userPhone,
+            (int) $history,
+            (int) $subscriptions,
+            (int) $multi
+        );
 
         return ($info)($infoRequest, $token);
     }

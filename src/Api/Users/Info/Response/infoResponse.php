@@ -1,6 +1,8 @@
 <?php
 
-namespace Studio15\SailPlay\SDK\Api\Users\Info;
+declare(strict_types=1);
+
+namespace Studio15\SailPlay\SDK\Api\Users\Info\Response;
 
 /**
  * @see https://ru.sailplay.dev/reference/users-info
@@ -17,7 +19,7 @@ final class infoResponse
     /**
      * Идентификатор
      *
-     * @var int
+     * @var ?int
      */
     private $id;
 
@@ -31,14 +33,14 @@ final class infoResponse
     /**
      * Номер телефона
      *
-     * @var string
+     * @var ?string
      */
     private $phone;
 
     /**
      * Имя
      *
-     * @var string
+     * @var ?string
      */
     private $firstName;
 
@@ -52,7 +54,7 @@ final class infoResponse
     /**
      * Фамилия
      *
-     * @var string
+     * @var ?string
      */
     private $lastName;
 
@@ -84,18 +86,61 @@ final class infoResponse
      */
     private $avatar;
 
+    /**
+     * Информация о баллах
+     *
+     * @var ?Points
+     */
+    private $points;
+
+    /**
+     * Хэш аутентификации
+     *
+     * @var ?string
+     */
+    private $authHash;
+
+    /**
+     * Реферальный промокод
+     *
+     * @var ?string
+     */
+    private $referralPromocode;
+
+    /**
+     * Подписки
+     *
+     * @var string[]|null
+     */
+    private $subscriptions;
+
+    /**
+     * История
+     *
+     * @var ?History
+     */
+    private $history;
+
+    /**
+     * @param string[]|null $subscriptions
+     */
     public function __construct(
         string $status,
-        int $id,
+        ?int $id,
         ?string $email,
-        string $phone,
-        string $firstName,
+        ?string $phone,
+        ?string $firstName,
         ?string $middleName,
-        string $lastName,
+        ?string $lastName,
         ?string $birthDate,
         ?string $sex,
         ?string $originUserId,
-        ?string $avatar
+        ?string $avatar,
+        ?Points $points,
+        ?string $authHash,
+        ?string $referralPromocode,
+        ?array $subscriptions,
+        ?History $history
     ) {
         $this->status = $status;
         $this->id = $id;
@@ -108,6 +153,11 @@ final class infoResponse
         $this->sex = $sex;
         $this->originUserId = $originUserId;
         $this->avatar = $avatar;
+        $this->points = $points;
+        $this->authHash = $authHash;
+        $this->referralPromocode = $referralPromocode;
+        $this->subscriptions = $subscriptions;
+        $this->history = $history;
     }
 
     public function getStatus(): string
@@ -115,7 +165,7 @@ final class infoResponse
         return $this->status;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -125,12 +175,12 @@ final class infoResponse
         return $this->email;
     }
 
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
 
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -140,7 +190,7 @@ final class infoResponse
         return $this->middleName;
     }
 
-    public function getLastName(): string
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
@@ -163,5 +213,33 @@ final class infoResponse
     public function getAvatar(): ?string
     {
         return $this->avatar;
+    }
+
+    public function getPoints(): ?Points
+    {
+        return $this->points;
+    }
+
+    public function getAuthHash(): ?string
+    {
+        return $this->authHash;
+    }
+
+    public function getReferralPromocode(): ?string
+    {
+        return $this->referralPromocode;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getSubscriptions(): ?array
+    {
+        return $this->subscriptions;
+    }
+
+    public function getHistory(): ?History
+    {
+        return $this->history;
     }
 }
