@@ -9,6 +9,10 @@ use Psr\SimpleCache\CacheInterface;
 use Studio15\SailPlay\SDK\Api\Login\Login;
 use Studio15\SailPlay\SDK\Api\Login\LoginRequest;
 use Studio15\SailPlay\SDK\Api\Login\LoginResponse;
+use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\CartItem;
+use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Light;
+use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightRequest;
+use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightResponse;
 use Studio15\SailPlay\SDK\Api\Users\Info\Info;
 use Studio15\SailPlay\SDK\Api\Users\Info\InfoRequest;
 use Studio15\SailPlay\SDK\Api\Users\Info\Response\infoResponse;
@@ -19,10 +23,6 @@ use Studio15\SailPlay\SDK\Infrastructure\Error\ApiErrorException;
 use Studio15\SailPlay\SDK\Infrastructure\Http\RequestFactory\DefaultServerRequestFactory;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Throwable;
 use Webmozart\Assert\Assert;
 
@@ -68,6 +68,7 @@ final class SailPlayApi
         bool $subscriptions = false,
         bool $multi = false
     ): infoResponse {
+        Assert::notEmpty($token);
         Assert::greaterThan($storeDepartmentId, 0);
         Assert::regex($userPhone, '/^7\d{10}$/');
 
@@ -81,6 +82,31 @@ final class SailPlayApi
         );
 
         return ($info)($infoRequest, $token);
+    }
+
+    /**
+     * @param string[] $promocodes
+     * @param CartItem[] $cartItems
+     *
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function marketingActionsCalcLight(
+        string $token,
+        int $storeDepartmentId,
+        array $promocodes,
+        array $cartItems
+    ): LightResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::allString($promocodes);
+        Assert::minCount($cartItems, 1);
+        Assert::allIsInstanceOf($cartItems, \get_class($cartItems[0]));
+
+        $light = new Light(self::getClient());
+        $lightRequest = new LightRequest($storeDepartmentId, $promocodes, $cartItems);
+
+        return ($light)($lightRequest, $token);
     }
 
     public static function getCache(): CacheInterface
@@ -101,15 +127,9 @@ final class SailPlayApi
             return self::$apiHttpClient;
         }
 
-        $symfonySerializer = new Serializer(
-            [new ObjectNormalizer(null, (new CamelCaseToSnakeCaseNameConverter()))],
-            [new JsonEncoder()]
-        );
-
         self::$apiHttpClient = new DefaultApiHttpClient(
             new Client(),
-            new DefaultServerRequestFactory(),
-            $symfonySerializer
+            new DefaultServerRequestFactory()
         );
 
         return self::$apiHttpClient;

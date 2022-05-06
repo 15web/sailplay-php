@@ -8,6 +8,7 @@ parameters:
   ignoreErrors:
     # https://github.com/phpstan/phpstan/issues/1066
     - '#^PHPDoc tag @throws with type Psr\\SimpleCache\\InvalidArgumentException\|Throwable is not subtype of Throwable$#'
+    - '#^Method.+normalize\(\) has parameter \$context with no value type specified in iterable type array\.$#'
 includes:
   - ../../vendor/phpstan/phpstan/conf/bleedingEdge.neon
   - ../../vendor/phpstan/phpstan-strict-rules/rules.neon

@@ -9,7 +9,12 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Studio15\SailPlay\SDK\Infrastructure\Error\ApiErrorException;
+use Studio15\SailPlay\SDK\Infrastructure\Serializer\JsonObject\JsonObjectNormalizer;
+use Studio15\SailPlay\SDK\Infrastructure\Serializer\StringsArrayNormalizer;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
 use Webmozart\Assert\Assert;
@@ -46,13 +51,20 @@ final class DefaultApiHttpClient implements ApiHttpClient
     public function __construct(
         ClientInterface $client,
         ServerRequestFactoryInterface $serverRequestFactory,
-        Serializer $serializer,
         ?LoggerInterface $logger = null
     ) {
-        $this->serializer = $serializer;
         $this->logger = $logger;
         $this->client = $client;
         $this->serverRequestFactory = $serverRequestFactory;
+
+        $this->serializer = new Serializer(
+            [
+                new StringsArrayNormalizer(),
+                new JsonObjectNormalizer(),
+                new ObjectNormalizer(null, (new CamelCaseToSnakeCaseNameConverter())),
+            ],
+            [new JsonEncoder()]
+        );
     }
 
     /**
