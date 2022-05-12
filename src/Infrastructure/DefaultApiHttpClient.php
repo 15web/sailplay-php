@@ -11,9 +11,14 @@ use Psr\Log\LoggerInterface;
 use Studio15\SailPlay\SDK\Infrastructure\Error\ApiErrorException;
 use Studio15\SailPlay\SDK\Infrastructure\Serializer\JsonObject\JsonObjectNormalizer;
 use Studio15\SailPlay\SDK\Infrastructure\Serializer\StringsArrayNormalizer;
+use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
+use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Throwable;
@@ -57,11 +62,17 @@ final class DefaultApiHttpClient implements ApiHttpClient
         $this->client = $client;
         $this->serverRequestFactory = $serverRequestFactory;
 
+        $reflectionExtractor = new ReflectionExtractor();
+        $phpDocExtractor = new PhpDocExtractor();
+        $propertyTypeExtractor = new PropertyInfoExtractor([$reflectionExtractor], [$phpDocExtractor, $reflectionExtractor], [$phpDocExtractor], [$reflectionExtractor], [$reflectionExtractor]);
+
         $this->serializer = new Serializer(
             [
                 new StringsArrayNormalizer(),
                 new JsonObjectNormalizer(),
-                new ObjectNormalizer(null, (new CamelCaseToSnakeCaseNameConverter())),
+                new ArrayDenormalizer(),
+                new DateTimeNormalizer(),
+                new ObjectNormalizer(null, (new CamelCaseToSnakeCaseNameConverter()), null, $propertyTypeExtractor),
             ],
             [new JsonEncoder()]
         );
