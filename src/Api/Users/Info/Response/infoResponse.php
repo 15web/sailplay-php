@@ -110,19 +110,20 @@ final class infoResponse
     /**
      * Подписки
      *
-     * @var string[]|null
+     * @var string[]
      */
     private $subscriptions;
 
     /**
      * История
      *
-     * @var ?History
+     * @var History[]
      */
     private $history;
 
     /**
-     * @param string[]|null $subscriptions
+     * @param string[] $subscriptions
+     * @param History[] $history
      */
     public function __construct(
         string $status,
@@ -139,8 +140,8 @@ final class infoResponse
         ?Points $points,
         ?string $authHash,
         ?string $referralPromocode,
-        ?array $subscriptions,
-        ?History $history
+        array $subscriptions = [],
+        array $history = []
     ) {
         $this->status = $status;
         $this->id = $id;
@@ -231,14 +232,17 @@ final class infoResponse
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getSubscriptions(): ?array
+    public function getSubscriptions(): array
     {
         return $this->subscriptions;
     }
 
-    public function getHistory(): ?History
+    /**
+     * @return History[]
+     */
+    public function getHistory(): array
     {
         return $this->history;
     }
