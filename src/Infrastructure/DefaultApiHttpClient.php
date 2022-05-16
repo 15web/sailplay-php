@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Studio15\SailPlay\SDK\Infrastructure;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Psr\Http\Client\ClientExceptionInterface as ClientException;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
@@ -16,6 +17,8 @@ use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerException;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
@@ -65,6 +68,7 @@ final class DefaultApiHttpClient implements ApiHttpClient
         $reflectionExtractor = new ReflectionExtractor();
         $phpDocExtractor = new PhpDocExtractor();
         $propertyTypeExtractor = new PropertyInfoExtractor([$reflectionExtractor], [$phpDocExtractor, $reflectionExtractor], [$phpDocExtractor], [$reflectionExtractor], [$reflectionExtractor]);
+        $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
 
         $this->serializer = new Serializer(
             [
@@ -72,7 +76,7 @@ final class DefaultApiHttpClient implements ApiHttpClient
                 new JsonObjectNormalizer(),
                 new ArrayDenormalizer(),
                 new DateTimeNormalizer(),
-                new ObjectNormalizer(null, (new CamelCaseToSnakeCaseNameConverter()), null, $propertyTypeExtractor),
+                new ObjectNormalizer($classMetadataFactory, (new CamelCaseToSnakeCaseNameConverter()), null, $propertyTypeExtractor),
             ],
             [new JsonEncoder()]
         );
