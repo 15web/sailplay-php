@@ -15,7 +15,7 @@ use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightRequest;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightResponse;
 use Studio15\SailPlay\SDK\Api\Users\Info\Info;
 use Studio15\SailPlay\SDK\Api\Users\Info\InfoRequest;
-use Studio15\SailPlay\SDK\Api\Users\Info\Response\infoResponse;
+use Studio15\SailPlay\SDK\Api\Users\Info\Response\InfoResponse;
 use Studio15\SailPlay\SDK\Api\Users\UserNotFoundException;
 use Studio15\SailPlay\SDK\Infrastructure\ApiHttpClient;
 use Studio15\SailPlay\SDK\Infrastructure\DefaultApiHttpClient;
@@ -67,7 +67,7 @@ final class SailPlayApi
         bool $history = false,
         bool $subscriptions = false,
         bool $multi = false
-    ): infoResponse {
+    ): InfoResponse {
         Assert::notEmpty($token);
         Assert::greaterThan($storeDepartmentId, 0);
         Assert::regex($userPhone, '/^7\d{10}$/');

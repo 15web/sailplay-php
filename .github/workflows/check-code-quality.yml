@@ -1,0 +1,21 @@
+name: Check Code Quality
+
+on: [push]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build PHP image
+        run: ./bin/docker_build.bash
+      - name: Install composer deps
+        run: ./bin/run.bash composer install --no-progress
+      - name: PHPStan check
+        run: ./bin/run.bash composer stan
+      - name: PHP CS Fixer check
+        run: ./bin/run.bash composer fixer-check
+      - name: PHP_CodeSniffer check
+        run: ./bin/run.bash composer sniffer-check
+      - name: Unit tests check
+        run: ./bin/run.bash composer unit
