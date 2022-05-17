@@ -4,7 +4,7 @@ namespace Studio15\SailPlay\SDK\Api\Users\Info;
 
 use Exception;
 use Studio15\SailPlay\SDK\Api\Errors\InvalidTokenException;
-use Studio15\SailPlay\SDK\Api\Users\Info\Response\infoResponse;
+use Studio15\SailPlay\SDK\Api\Users\Info\Response\InfoResponse;
 use Studio15\SailPlay\SDK\Api\Users\UserNotFoundException;
 use Studio15\SailPlay\SDK\Infrastructure\ApiHttpClient;
 use Studio15\SailPlay\SDK\Infrastructure\Error\ApiErrorException;
@@ -29,12 +29,12 @@ final class Info
      * @throws ApiErrorException
      * @throws Throwable
      */
-    public function __invoke(InfoRequest $infoRequest, string $token): infoResponse
+    public function __invoke(InfoRequest $infoRequest, string $token): InfoResponse
     {
         try {
             $infoResponse = $this->apiClient->get(
                 self::RESOURCE_PATH,
-                infoResponse::class,
+                InfoResponse::class,
                 $infoRequest,
                 $token
             );

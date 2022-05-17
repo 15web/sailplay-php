@@ -37,19 +37,27 @@ echo $userInfoResponse->getEmail();
 ```
 
 ## Разработка
+### Сборка образа PHP (обязательно перед всеми операциями с run.bash)
+```shell
+./bin/docker_build.bash
+```
 ### Установка зависимостей
 ```shell
 ./bin/run.bash composer install
-```
-### Установка git hooks
-```shell
-./bin/hooks.bash
 ```
 ### Запуск PHP
 ```shell
 ./bin/run.bash php tests/functional/Users/info.php
 ```
-
+### Функциональные тесты
+```shell
+cp tests/functional/.env.dist tests/functional/.env
+./bin/run.bash php tests/functional/Users/info.php
+```
+### Установка git hooks
+```shell
+./bin/hooks.bash
+```
 ### Copyright and license
 
 Copyright © [Studio 15](http://15web.ru), 2012 - Present.   

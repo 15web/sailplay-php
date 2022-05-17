@@ -7,7 +7,7 @@ namespace Studio15\SailPlay\SDK\Api\Users\Info\Response;
 /**
  * @see https://ru.sailplay.dev/reference/users-info
  */
-final class infoResponse
+final class InfoResponse
 {
     /**
      * Статус ответа
