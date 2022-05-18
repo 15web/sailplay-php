@@ -2,8 +2,7 @@
 
 namespace Studio15\SailPlay\SDK\Api\Users\AddUser;
 
-use Symfony\Component\Serializer\Annotation as Serializer;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Studio15\SailPlay\SDK\Infrastructure\Serializer\YearMonthDay\YearMonthDay;
 use Webmozart\Assert\Assert;
 
 /**
@@ -74,9 +73,7 @@ final class AddUserRequest
     /**
      * Дата рождения
      *
-     * @var ?\DateTimeImmutable
-     *
-     * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "Y-m-d" })
+     * @var ?YearMonthDay<\DateTimeImmutable>
      */
     private $birthDate;
 
@@ -90,9 +87,7 @@ final class AddUserRequest
     /**
      * Дата регистрации
      *
-     * @var ?\DateTimeImmutable
-     *
-     * @Serializer\Context({ DateTimeNormalizer::FORMAT_KEY = "Y-m-d" })
+     * @var ?YearMonthDay<\DateTimeImmutable>
      */
     private $registerDate;
 
@@ -144,7 +139,7 @@ final class AddUserRequest
         Assert::nullOrRegex($userPhone, '/^7\d{10}$/');
         Assert::nullOrNotEmpty($originUserId);
         Assert::nullOrEmail($email);
-        Assert::notEmpty($userPhone . $originUserId);
+        Assert::notEmpty($userPhone.$originUserId);
         Assert::nullOrInArray($sex, self::SEX);
         Assert::nullOrRegex($referrerPhone, '/^7\d{10}$/');
         Assert::nullOrEmail($referrerEmail);
@@ -156,13 +151,14 @@ final class AddUserRequest
         $this->firstName = $firstName;
         $this->middleName = $middleName;
         $this->lastName = $lastName;
-        $this->birthDate = $birthDate;
         $this->sex = $sex;
-        $this->registerDate = $registerDate;
         $this->referrerOriginUserId = $referrerOriginUserId;
         $this->referrerPhone = $referrerPhone;
         $this->referrerEmail = $referrerEmail;
         $this->referrerPromocode = $referrerPromocode;
+
+        $this->setBirthDate($birthDate);
+        $this->setRegisterDate($registerDate);
     }
 
     public function getStoreDepartmentId(): int
@@ -200,7 +196,10 @@ final class AddUserRequest
         return $this->lastName;
     }
 
-    public function getBirthDate(): ?\DateTimeImmutable
+    /**
+     * @return YearMonthDay<\DateTimeImmutable>
+     */
+    public function getBirthDate(): ?YearMonthDay
     {
         return $this->birthDate;
     }
@@ -210,7 +209,10 @@ final class AddUserRequest
         return $this->sex;
     }
 
-    public function getRegisterDate(): ?\DateTimeImmutable
+    /**
+     * @return YearMonthDay<\DateTimeImmutable>
+     */
+    public function getRegisterDate(): ?YearMonthDay
     {
         return $this->registerDate;
     }
@@ -233,5 +235,27 @@ final class AddUserRequest
     public function getReferrerPromocode(): ?string
     {
         return $this->referrerPromocode;
+    }
+
+    public function setBirthDate(?\DateTimeImmutable $birthDate = null): void
+    {
+        if ($birthDate === null) {
+            $this->birthDate = null;
+
+            return;
+        }
+
+        $this->birthDate = new YearMonthDay($birthDate);
+    }
+
+    public function setRegisterDate(?\DateTimeImmutable $registerDate): void
+    {
+        if ($registerDate === null) {
+            $this->registerDate = null;
+
+            return;
+        }
+
+        $this->registerDate = new YearMonthDay($registerDate);
     }
 }
