@@ -13,6 +13,9 @@ use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\CartItem;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Light;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightRequest;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightResponse;
+use Studio15\SailPlay\SDK\Api\Purchases\Create\Create;
+use Studio15\SailPlay\SDK\Api\Purchases\Create\CreateRequest;
+use Studio15\SailPlay\SDK\Api\Purchases\Response\PurchasesResponse;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUser;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUserRequest;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\Response\AddUserResponse;
@@ -163,6 +166,49 @@ final class SailPlayApi
         $lightRequest = new LightRequest($storeDepartmentId, $promocodes, $cartItems);
 
         return ($light)($lightRequest, $token);
+    }
+
+    /**
+     * @param CartItem[] $cartItems
+     * @param string[] $promocodes
+     *
+     * @throws UserNotFoundException
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function purchasesNew(
+        string $token,
+        int $storeDepartmentId,
+        string $orderNum,
+        ?string $userPhone,
+        ?array $cartItems,
+        ?bool $forceComplete,
+        ?int $verbose,
+        ?array $promocodes,
+        ?int $discountPointsWriteoffm,
+        ?string $attrs,
+        ?string $targetDepId
+    ): PurchasesResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::notEmpty($orderNum);
+        Assert::nullOrRegex($userPhone, '/^7\d{10}$/');
+
+        $create = new Create(self::getClient());
+        $createRequest = new CreateRequest(
+            $storeDepartmentId,
+            $orderNum,
+            $userPhone,
+            $cartItems,
+            $forceComplete,
+            $verbose,
+            $promocodes,
+            $discountPointsWriteoffm,
+            $attrs,
+            $targetDepId
+        );
+
+        return ($create)($createRequest, $token);
     }
 
     public static function getCache(): CacheInterface
