@@ -13,6 +13,9 @@ use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\CartItem;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Light;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightRequest;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightResponse;
+use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUser;
+use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUserRequest;
+use Studio15\SailPlay\SDK\Api\Users\AddUser\Response\AddUserResponse;
 use Studio15\SailPlay\SDK\Api\Users\Info\Info;
 use Studio15\SailPlay\SDK\Api\Users\Info\InfoRequest;
 use Studio15\SailPlay\SDK\Api\Users\Info\Response\InfoResponse;
@@ -53,6 +56,59 @@ final class SailPlayApi
         $loginRequest = new LoginRequest($storeDepartmentId, $storeDepartmentKey, $pinCode);
 
         return ($login)($loginRequest);
+    }
+
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     * @throws UserNotFoundException
+     */
+    public static function usersAdd(
+        string $token,
+        int $storeDepartmentId,
+        ?string $userPhone = null,
+        ?string $originUserId = null,
+        ?string $email = null,
+        ?string $firstName = null,
+        ?string $middleName = null,
+        ?string $lastName = null,
+        ?\DateTimeImmutable $birthDate = null,
+        ?int $sex = null,
+        ?\DateTimeImmutable $registerDate = null,
+        ?string $referrerOriginUserId = null,
+        ?string $referrerPhone = null,
+        ?string $referrerEmail = null,
+        ?string $referrerPromocode = null
+    ): AddUserResponse {
+        Assert::notEmpty($token);
+        Assert::nullOrRegex($userPhone, '/^7\d{10}$/');
+        Assert::nullOrNotEmpty($originUserId);
+        Assert::nullOrEmail($email);
+        Assert::notEmpty($userPhone.$originUserId);
+        Assert::nullOrInArray($sex, AddUserRequest::SEX);
+        Assert::nullOrRegex($referrerPhone, '/^7\d{10}$/');
+        Assert::nullOrEmail($referrerEmail);
+
+        $addUser = new AddUser(self::getClient());
+
+        $addUserRequest = new AddUserRequest(
+            $storeDepartmentId,
+            $userPhone,
+            $originUserId,
+            $email,
+            $firstName,
+            $middleName,
+            $lastName,
+            $birthDate,
+            $sex,
+            $registerDate,
+            $referrerOriginUserId,
+            $referrerPhone,
+            $referrerEmail,
+            $referrerPromocode
+        );
+
+        return ($addUser)($addUserRequest, $token);
     }
 
     /**
