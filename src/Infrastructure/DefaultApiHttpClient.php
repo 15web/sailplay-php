@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Studio15\SailPlay\SDK\Infrastructure\Error\ApiErrorException;
 use Studio15\SailPlay\SDK\Infrastructure\Serializer\JsonObject\JsonObjectNormalizer;
+use Studio15\SailPlay\SDK\Infrastructure\Serializer\JsonObjectsAssociativeArray\JsonObjectsAssociativeArrayNormalizer;
 use Studio15\SailPlay\SDK\Infrastructure\Serializer\StringsArrayNormalizer;
 use Studio15\SailPlay\SDK\Infrastructure\Serializer\YearMonthDay\YearMonthDayNormalizer;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -71,6 +72,7 @@ final class DefaultApiHttpClient implements ApiHttpClient
             [
                 new StringsArrayNormalizer(),
                 new JsonObjectNormalizer(),
+                new JsonObjectsAssociativeArrayNormalizer(),
                 new ArrayDenormalizer(),
                 new DateTimeNormalizer(),
                 new YearMonthDayNormalizer(),
