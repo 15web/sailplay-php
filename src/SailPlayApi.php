@@ -28,6 +28,11 @@ use Studio15\SailPlay\SDK\Api\Promocodes\ListGroups\Response\ListPromocodesGroup
 use Studio15\SailPlay\SDK\Api\Promocodes\Search\Response\SearchResponse;
 use Studio15\SailPlay\SDK\Api\Promocodes\Search\Search;
 use Studio15\SailPlay\SDK\Api\Promocodes\Search\SearchRequest;
+use Studio15\SailPlay\SDK\Api\Purchases\Create\CreatePurchase;
+use Studio15\SailPlay\SDK\Api\Purchases\Create\Request\Attribute;
+use Studio15\SailPlay\SDK\Api\Purchases\Create\Request\CartItem as CartItemPurchase;
+use Studio15\SailPlay\SDK\Api\Purchases\Create\Request\CreatePurchaseRequest;
+use Studio15\SailPlay\SDK\Api\Purchases\Create\Response\CreatePurchasesResponse;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\Add;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddResponse;
@@ -425,6 +430,50 @@ final class SailPlayApi
         );
 
         return ($listValuesPurchaseAttributes)($listValuesPurchaseAttributesRequest, $token);
+    }
+
+    /**
+     * @param CartItemPurchase[]|null $cartItems
+     * @param string[]|null $promocodes
+     * @param Attribute[]|null $attrs
+     *
+     * @throws UserNotFoundException
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function purchasesNew(
+        string $token,
+        int $storeDepartmentId,
+        string $orderNum,
+        ?string $userPhone,
+        ?array $cartItems,
+        ?bool $forceComplete,
+        ?int $verbose,
+        ?array $promocodes,
+        ?int $discountPointsWriteoffm,
+        ?array $attrs,
+        ?string $targetDepId
+    ): CreatePurchasesResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::notEmpty($orderNum);
+        Assert::nullOrRegex($userPhone, '/^7\d{10}$/');
+
+        $createPurchase = new CreatePurchase(self::getClient());
+        $createPurchaseRequest = new CreatePurchaseRequest(
+            $storeDepartmentId,
+            $orderNum,
+            $userPhone,
+            $cartItems,
+            $forceComplete,
+            $verbose,
+            $promocodes,
+            $discountPointsWriteoffm,
+            $attrs,
+            $targetDepId
+        );
+
+        return ($createPurchase)($createPurchaseRequest, $token);
     }
 
     public static function getCache(): CacheInterface
