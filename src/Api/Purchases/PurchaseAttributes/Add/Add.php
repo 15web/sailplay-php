@@ -13,6 +13,7 @@ use Throwable;
  */
 final class Add
 {
+    public const VALUE_TYPES = ['str', 'float', 'text', 'date', 'bool'];
     private const RESOURCE_PATH = 'purchases/purchase-attributes/add';
 
     /**
@@ -31,7 +32,7 @@ final class Add
      */
     public function __invoke(AddRequest $addRequest, string $token): AddResponse
     {
-        return $this->apiClient->get(
+        return $this->apiClient->post(
             self::RESOURCE_PATH,
             AddResponse::class,
             $addRequest,
