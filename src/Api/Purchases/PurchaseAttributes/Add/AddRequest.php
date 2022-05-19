@@ -44,7 +44,8 @@ final class AddRequest
         ?string $description
     ) {
         Assert::greaterThan($storeDepartmentId, 0);
-        Assert::inArray($valueType, ['str', 'float', 'text', 'date', 'bool']);
+        Assert::notEmpty($alias);
+        Assert::inArray($valueType, Add::VALUE_TYPES);
 
         $this->storeDepartmentId = $storeDepartmentId;
         $this->alias = $alias;

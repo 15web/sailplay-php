@@ -28,7 +28,7 @@ final class AddResponse
     /**
      * Дата создания
      *
-     * @var string|null
+     * @var \DateTimeImmutable|null
      */
     private $createDate;
 
@@ -49,11 +49,11 @@ final class AddResponse
     public function __construct(
         string $status,
         ?string $alias,
-        ?string $createDate,
+        ?\DateTimeImmutable $createDate,
         ?string $valueType,
         ?string $description
     ) {
-        Assert::inArray($valueType, ['str', 'float', 'text', 'date', 'bool']);
+        Assert::inArray($valueType, Add::VALUE_TYPES);
 
         $this->status = $status;
         $this->alias = $alias;
@@ -72,7 +72,7 @@ final class AddResponse
         return $this->alias;
     }
 
-    public function getCreateDate(): ?string
+    public function getCreateDate(): ?\DateTimeImmutable
     {
         return $this->createDate;
     }
