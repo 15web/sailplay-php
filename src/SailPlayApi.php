@@ -12,7 +12,7 @@ use Studio15\SailPlay\SDK\Api\Login\LoginResponse;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\CartItem;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Light;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightRequest;
-use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightResponse;
+use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Response\LightResponse;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUser;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUserRequest;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\Response\AddUserResponse;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light;
 
+use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Response\LightResponse;
 use Studio15\SailPlay\SDK\Infrastructure\ApiHttpClient;
 use Studio15\SailPlay\SDK\Infrastructure\Error\ApiErrorException;
 use Throwable;
@@ -29,12 +30,12 @@ final class Light
      * @throws ApiErrorException
      * @throws Throwable
      */
-    public function __invoke(LightRequest $infoRequest, string $token): LightResponse
+    public function __invoke(LightRequest $lightRequest, string $token): LightResponse
     {
         return $this->apiClient->get(
             self::RESOURCE_PATH,
             LightResponse::class,
-            $infoRequest,
+            $lightRequest,
             $token
         );
     }
