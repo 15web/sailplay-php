@@ -13,6 +13,9 @@ use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\CartItem;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Light;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightRequest;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightResponse;
+use Studio15\SailPlay\SDK\Api\Promocodes\Issue\Issue;
+use Studio15\SailPlay\SDK\Api\Promocodes\Issue\IssueRequest;
+use Studio15\SailPlay\SDK\Api\Promocodes\Issue\Response\IssueResponse;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUser;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUserRequest;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\Response\AddUserResponse;
@@ -163,6 +166,27 @@ final class SailPlayApi
         $lightRequest = new LightRequest($storeDepartmentId, $promocodes, $cartItems);
 
         return ($light)($lightRequest, $token);
+    }
+
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function promocodesIssue(
+        string $token,
+        int $storeDepartmentId,
+        string $userPhone,
+        string $groupName
+    ): IssueResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::regex($userPhone, '/^7\d{10}$/');
+        Assert::notEmpty($groupName);
+
+        $issue = new Issue(self::getClient());
+        $issueRequest = new IssueRequest($storeDepartmentId, $userPhone, $groupName);
+
+        return ($issue)($issueRequest, $token);
     }
 
     public static function getCache(): CacheInterface
