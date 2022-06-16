@@ -16,6 +16,9 @@ use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Response\LightResponse
 use Studio15\SailPlay\SDK\Api\Promocodes\Activate\Activate;
 use Studio15\SailPlay\SDK\Api\Promocodes\Activate\ActivateRequest;
 use Studio15\SailPlay\SDK\Api\Promocodes\Activate\ActivateResponse;
+use Studio15\SailPlay\SDK\Api\Promocodes\Issue\Issue;
+use Studio15\SailPlay\SDK\Api\Promocodes\Issue\IssueRequest;
+use Studio15\SailPlay\SDK\Api\Promocodes\Issue\Response\IssueResponse;
 use Studio15\SailPlay\SDK\Api\Promocodes\ListGroups\ListPromocodesGroups;
 use Studio15\SailPlay\SDK\Api\Promocodes\ListGroups\ListPromocodesGroupsRequest;
 use Studio15\SailPlay\SDK\Api\Promocodes\ListGroups\Response\ListPromocodesGroupsResponse;
@@ -198,6 +201,27 @@ final class SailPlayApi
         $activateRequest = new ActivateRequest($storeDepartmentId, $userPhone, $groupName, $number);
 
         return ($activate)($activateRequest, $token);
+    }
+
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function promocodesIssue(
+        string $token,
+        int $storeDepartmentId,
+        string $userPhone,
+        string $groupName
+    ): IssueResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::regex($userPhone, '/^7\d{10}$/');
+        Assert::notEmpty($groupName);
+
+        $issue = new Issue(self::getClient());
+        $issueRequest = new IssueRequest($storeDepartmentId, $userPhone, $groupName);
+
+        return ($issue)($issueRequest, $token);
     }
 
     /**
