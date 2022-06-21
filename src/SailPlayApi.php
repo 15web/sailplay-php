@@ -13,6 +13,9 @@ use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\CartItem;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Light;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightRequest;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightResponse;
+use Studio15\SailPlay\SDK\Api\Promocodes\Activate\Activate;
+use Studio15\SailPlay\SDK\Api\Promocodes\Activate\ActivateRequest;
+use Studio15\SailPlay\SDK\Api\Promocodes\Activate\ActivateResponse;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUser;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUserRequest;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\Response\AddUserResponse;
@@ -163,6 +166,29 @@ final class SailPlayApi
         $lightRequest = new LightRequest($storeDepartmentId, $promocodes, $cartItems);
 
         return ($light)($lightRequest, $token);
+    }
+
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function promocodesActivate(
+        string $token,
+        int $storeDepartmentId,
+        string $userPhone,
+        string $groupName,
+        string $number
+    ): ActivateResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::regex($userPhone, '/^7\d{10}$/');
+        Assert::notEmpty($groupName);
+        Assert::notEmpty($number);
+
+        $activate = new Activate(self::getClient());
+        $activateRequest = new ActivateRequest($storeDepartmentId, $userPhone, $groupName, $number);
+
+        return ($activate)($activateRequest, $token);
     }
 
     public static function getCache(): CacheInterface
