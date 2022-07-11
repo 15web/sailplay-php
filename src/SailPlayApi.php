@@ -31,6 +31,9 @@ use Studio15\SailPlay\SDK\Api\Promocodes\Search\SearchRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\Add;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddResponse;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListAll\ListPurchaseAttributes;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListAll\ListPurchaseAttributesRequest;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListAll\Response\ListPurchaseAttributesResponse;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListValues\ListValuesPurchaseAttributes;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListValues\ListValuesPurchaseAttributesRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListValues\Response\ListValuesPurchaseAttributesResponse;
@@ -305,6 +308,23 @@ final class SailPlayApi
         $addRequest = new AddRequest($storeDepartmentId, $alias, $valueType, $description);
 
         return ($add)($addRequest, $token);
+    }
+
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function purchaseAttributesList(
+        string $token,
+        int $storeDepartmentId
+    ): ListPurchaseAttributesResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+
+        $listPurchaseAttributes = new ListPurchaseAttributes(self::getClient());
+        $listPurchaseAttributesRequest = new ListPurchaseAttributesRequest($storeDepartmentId);
+
+        return ($listPurchaseAttributes)($listPurchaseAttributesRequest, $token);
     }
 
     /**
