@@ -31,6 +31,9 @@ use Studio15\SailPlay\SDK\Api\Promocodes\Search\SearchRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\Add;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddResponse;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListValues\ListValuesPurchaseAttributes;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListValues\ListValuesPurchaseAttributesRequest;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListValues\Response\ListValuesPurchaseAttributesResponse;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUser;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUserRequest;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\Response\AddUserResponse;
@@ -302,6 +305,31 @@ final class SailPlayApi
         $addRequest = new AddRequest($storeDepartmentId, $alias, $valueType, $description);
 
         return ($add)($addRequest, $token);
+    }
+
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function purchaseAttributesListValues(
+        string $token,
+        int $storeDepartmentId,
+        string $attrAlias,
+        int $page = 1
+    ): ListValuesPurchaseAttributesResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::notEmpty($attrAlias);
+        Assert::positiveInteger($page);
+
+        $listValuesPurchaseAttributes = new ListValuesPurchaseAttributes(self::getClient());
+        $listValuesPurchaseAttributesRequest = new ListValuesPurchaseAttributesRequest(
+            $storeDepartmentId,
+            $attrAlias,
+            $page
+        );
+
+        return ($listValuesPurchaseAttributes)($listValuesPurchaseAttributesRequest, $token);
     }
 
     public static function getCache(): CacheInterface
