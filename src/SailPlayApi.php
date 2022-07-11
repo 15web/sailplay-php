@@ -13,6 +13,9 @@ use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\CartItem;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Light;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightRequest;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightResponse;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Delete\DeletePurchaseAttributes;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Delete\DeletePurchaseAttributesRequest;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Delete\DeletePurchaseAttributesResponse;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUser;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUserRequest;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\Response\AddUserResponse;
@@ -163,6 +166,24 @@ final class SailPlayApi
         $lightRequest = new LightRequest($storeDepartmentId, $promocodes, $cartItems);
 
         return ($light)($lightRequest, $token);
+    }
+
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function purchaseAttributesDelete(
+        string $token,
+        int $storeDepartmentId,
+        string $alias
+    ): DeletePurchaseAttributesResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+
+        $deletePurchaseAttributes = new DeletePurchaseAttributes(self::getClient());
+        $deletePurchaseAttributesRequest = new DeletePurchaseAttributesRequest($storeDepartmentId, $alias);
+
+        return ($deletePurchaseAttributes)($deletePurchaseAttributesRequest, $token);
     }
 
     public static function getCache(): CacheInterface
