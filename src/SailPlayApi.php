@@ -13,6 +13,9 @@ use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\CartItem;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Light;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightRequest;
 use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\LightResponse;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\AddValues\AddValuesPurchaseAttributes;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\AddValues\AddValuesPurchaseAttributesRequest;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\AddValues\AddValuesPurchaseAttributesResponse;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUser;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\AddUserRequest;
 use Studio15\SailPlay\SDK\Api\Users\AddUser\Response\AddUserResponse;
@@ -163,6 +166,32 @@ final class SailPlayApi
         $lightRequest = new LightRequest($storeDepartmentId, $promocodes, $cartItems);
 
         return ($light)($lightRequest, $token);
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function purchaseAttributesAddValues(
+        string $token,
+        int $storeDepartmentId,
+        string $attrAlias,
+        $value
+    ): AddValuesPurchaseAttributesResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::notEmpty($attrAlias);
+
+        $addValuesPurchaseAttributes = new AddValuesPurchaseAttributes(self::getClient());
+        $addValuesPurchaseAttributesRequest = new AddValuesPurchaseAttributesRequest(
+            $storeDepartmentId,
+            $attrAlias,
+            $value
+        );
+
+        return ($addValuesPurchaseAttributes)($addValuesPurchaseAttributesRequest, $token);
     }
 
     public static function getCache(): CacheInterface
