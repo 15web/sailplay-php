@@ -37,6 +37,9 @@ use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\AddValues\AddValuesPu
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Delete\DeletePurchaseAttributes;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Delete\DeletePurchaseAttributesRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Delete\DeletePurchaseAttributesResponse;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\DeleteValues\DeleteValuesPurchaseAttributes;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\DeleteValues\DeleteValuesPurchaseAttributesRequest;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\DeleteValues\DeleteValuesPurchaseAttributesResponse;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListAll\ListPurchaseAttributes;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListAll\ListPurchaseAttributesRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListAll\Response\ListPurchaseAttributesResponse;
@@ -358,6 +361,28 @@ final class SailPlayApi
         $deletePurchaseAttributesRequest = new DeletePurchaseAttributesRequest($storeDepartmentId, $alias);
 
         return ($deletePurchaseAttributes)($deletePurchaseAttributesRequest, $token);
+    }
+
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function purchaseAttributesDeleteValues(
+        string $token,
+        int $storeDepartmentId,
+        int $id
+    ): DeleteValuesPurchaseAttributesResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::positiveInteger($id);
+
+        $deleteValuesPurchaseAttributes = new DeleteValuesPurchaseAttributes(self::getClient());
+        $deleteValuesPurchaseAttributesRequest = new DeleteValuesPurchaseAttributesRequest(
+            $storeDepartmentId,
+            $id
+        );
+
+        return ($deleteValuesPurchaseAttributes)($deleteValuesPurchaseAttributesRequest, $token);
     }
 
     /**
