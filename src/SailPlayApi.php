@@ -16,6 +16,9 @@ use Studio15\SailPlay\SDK\Api\MarketingActions\Calc\Light\Response\LightResponse
 use Studio15\SailPlay\SDK\Api\Promocodes\ListGroups\ListPromocodesGroups;
 use Studio15\SailPlay\SDK\Api\Promocodes\ListGroups\ListPromocodesGroupsRequest;
 use Studio15\SailPlay\SDK\Api\Promocodes\ListGroups\Response\ListPromocodesGroupsResponse;
+use Studio15\SailPlay\SDK\Api\Promocodes\Search\Response\SearchResponse;
+use Studio15\SailPlay\SDK\Api\Promocodes\Search\Search;
+use Studio15\SailPlay\SDK\Api\Promocodes\Search\SearchRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\Add;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddResponse;
@@ -186,6 +189,27 @@ final class SailPlayApi
         $listPromocodesGroupsRequest = new ListPromocodesGroupsRequest($storeDepartmentId);
 
         return ($listPromocodesGroups)($listPromocodesGroupsRequest, $token);
+    }
+
+    /**
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function promocodesSearch(
+        string $token,
+        int $storeDepartmentId,
+        string $number,
+        ?string $userPhone = null
+    ): SearchResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::nullOrRegex($userPhone, '/^7\d{10}$/');
+        Assert::notEmpty($number);
+
+        $search = new Search(self::getClient());
+        $searchRequest = new SearchRequest($storeDepartmentId, $number, $userPhone);
+
+        return ($search)($searchRequest, $token);
     }
 
     /**
