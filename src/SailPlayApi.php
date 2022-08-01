@@ -31,6 +31,9 @@ use Studio15\SailPlay\SDK\Api\Promocodes\Search\SearchRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\Add;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\Add\AddResponse;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\AddValues\AddValuesPurchaseAttributes;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\AddValues\AddValuesPurchaseAttributesRequest;
+use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\AddValues\AddValuesPurchaseAttributesResponse;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListAll\ListPurchaseAttributes;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListAll\ListPurchaseAttributesRequest;
 use Studio15\SailPlay\SDK\Api\Purchases\PurchaseAttributes\ListAll\Response\ListPurchaseAttributesResponse;
@@ -308,6 +311,32 @@ final class SailPlayApi
         $addRequest = new AddRequest($storeDepartmentId, $alias, $valueType, $description);
 
         return ($add)($addRequest, $token);
+    }
+
+    /**
+     * @param mixed $value
+     *
+     * @throws ApiErrorException
+     * @throws Throwable
+     */
+    public static function purchaseAttributesAddValues(
+        string $token,
+        int $storeDepartmentId,
+        string $attrAlias,
+        $value
+    ): AddValuesPurchaseAttributesResponse {
+        Assert::notEmpty($token);
+        Assert::greaterThan($storeDepartmentId, 0);
+        Assert::notEmpty($attrAlias);
+
+        $addValuesPurchaseAttributes = new AddValuesPurchaseAttributes(self::getClient());
+        $addValuesPurchaseAttributesRequest = new AddValuesPurchaseAttributesRequest(
+            $storeDepartmentId,
+            $attrAlias,
+            $value
+        );
+
+        return ($addValuesPurchaseAttributes)($addValuesPurchaseAttributesRequest, $token);
     }
 
     /**
