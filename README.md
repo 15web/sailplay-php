@@ -77,3 +77,5 @@ Code released under [the MIT license](https://opensource.org/licenses/MIT).
 We use [BrowserStack](https://www.browserstack.com/) for cross browser testing.
 
 ![BrowserStack](http://15web.github.io/web-accessibility/images/browserstack_logo.png)
+
+:heart:
